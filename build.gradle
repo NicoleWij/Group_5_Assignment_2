@@ -17,16 +17,24 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    // For Servlet API
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    
+    // Eclipse Jetty server dependencies
+    implementation 'org.eclipse.jetty:jetty-server:9.4.44.v20210927'
+    implementation 'org.eclipse.jetty:jetty-servlet:9.4.44.v20210927'
 
-    // This dependency is used by the application.
-    implementation 'com.google.guava:guava:31.1-jre'
+    // Other dependencies for Jetty if you need them
+    // implementation 'org.eclipse.jetty:jetty-webapp:9.4.44.v20210927'
+    // implementation 'org.eclipse.jetty:jetty-util:9.4.44.v20210927'
+
+    // JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'group_5_assignment_2.App'
+    mainClass = 'group_5_assignment_2.src'
 }
 
 tasks.named('test') {
