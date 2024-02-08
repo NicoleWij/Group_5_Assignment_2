@@ -8,4 +8,3 @@
  */
 
 rootProject.name = 'Group_5_Assignment_2'
-include('app')
