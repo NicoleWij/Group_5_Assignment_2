@@ -5,10 +5,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
  
 import java.io.IOException;
- 
+import java.nio.file.Files;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.json.JSONObject;
+import org.kohsuke.github.GHEventPayload.Create;
+
+import java.util.stream.Collectors;
+import java.util.Date;
+import java.text.*;
+import org.json.*;
+import java.nio.file.*;
+
+
 
 /** 
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -30,16 +42,45 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // here you do all the continuous integration tasks
         // for example
+        
+
+
         // 1st clone your repository
         // 2nd compile the code
 
+        JSONObject requestbody;
+        if (requestbody.has("head_commit")) {
+            String headCommitId = requestbody.getJSONObject("head_commit").getString("id");
+            String repoUrl = requestbody.getJSONObject("repository").getString("clone_url");
+            System.out.println("extracted commit and repo: " + headCommitId + " " + repoUrl);
+
+            //Clone
+
+            //Path directory = Files.createDirectory("myRepository");
+            Path tempDir = Files.createTempDirectory("repo");
+            Path pathDir = tempDir.toAbsolutePath();
+
+            // runs the git clone command
+            Process command = Runtime.getRuntime().exec("git clone " + repoUrl + " " + pathDir.toString());
+
+
+
+
+            return cloneAndTest(repoUrl, headCommitId);
+        }
+
         response.getWriter().println("CI job done");
+
     }
  
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-        Server server = new Server(8080);
+        Server server = new Server(8005);
+
+        WebAppContext myContext = new WebAppContext();
+        myContext.setResourceBase(FAILED);
+
         server.setHandler(new ContinuousIntegrationServer()); 
         server.start();
         server.join();
