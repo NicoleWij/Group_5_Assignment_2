@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 
+import org.eclipse.jgit.api.Git;
 import se.kth.dd2480.utils.GitUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.jetty.server.Server;
@@ -49,30 +50,20 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
 
         // 1st clone your repository
-        GitUtilities.cloneRepository("https://github.com/NicoleWij/Group_5_Assignment_1");
+        Git clone = GitUtilities.cloneRepository("https://github.com/NicoleWij/Group_5_Assignment_1");
 
         // 2nd compile the code
 
-        JSONObject requestbody;
-        if (requestbody.has("head_commit")) {
-            String headCommitId = requestbody.getJSONObject("head_commit").getString("id");
-            String repoUrl = requestbody.getJSONObject("repository").getString("clone_url");
-            System.out.println("extracted commit and repo: " + headCommitId + " " + repoUrl);
-
-            //Clone
-
-            //Path directory = Files.createDirectory("myRepository");
-            Path tempDir = Files.createTempDirectory("repo");
-            Path pathDir = tempDir.toAbsolutePath();
-
-            // runs the git clone command
-            Process command = Runtime.getRuntime().exec("git clone " + repoUrl + " " + pathDir.toString());
-
-
-
-
-            return cloneAndTest(repoUrl, headCommitId);
+        if (clone != null) {
+            Path directory = clone.getRepository().getDirectory().toPath().getParent();
+            boolean success = GitUtilities.compileProject(directory);
+            if (success) {
+                System.out.println("Compilation successful");
+            } else {
+                System.out.println("Compilation failed");
+            }
         }
+
 
         response.getWriter().println("CI job done");
 

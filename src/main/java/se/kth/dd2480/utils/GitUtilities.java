@@ -24,4 +24,20 @@ public class GitUtilities {
             return null;
         }
     }
+
+    public static boolean compileProject(Path projectDir) {
+        try {
+            // Assuming Maven project, replace with your build command
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.command("mvn", "-f", projectDir.resolve("pom.xml").toString(), "compile");
+            builder.directory(projectDir.toFile());
+            Process process = builder.start();
+            int exitCode = process.waitFor();
+            return exitCode == 0;
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Exception occurred during project compilation: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
