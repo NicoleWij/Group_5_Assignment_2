@@ -1,11 +1,13 @@
 package se.kth.dd2480;// package
 
+import org.apache.commons.io.IOUtils;
 import se.kth.dd2480.utils.GitUtilities;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,10 +18,10 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.nio.file.*;
+import java.util.Map;
 
 
-
-/** 
+/**
  Skeleton of a com.kth.dd2480.ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
 */
@@ -34,6 +36,40 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
+        
+
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            baseRequest.setHandled(true);
+
+            if ("GET".equalsIgnoreCase(request.getMethod())) {
+                String payload = IOUtils.toString(request.getReader());
+                System.out.println(payload);
+                BufferedReader reader = request.getReader();
+
+                // Read the content of the request body
+                StringBuilder requestBody = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    requestBody.append(line);
+                }
+
+                // Now you have the request body in the requestBody StringBuilder
+                // You can process it further as needed
+
+                // Close the reader when done
+                reader.close();
+                System.out.println(requestBody);
+
+            } else if ("POST".equalsIgnoreCase(request.getMethod())) {
+            }
+        } catch (IOException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Something went wrong while handling request");
+        }
+
+        Map<String, String[]> parameters = request.getParameterMap();
+        //String branch = parameters.get("branch")[0]; // Adjust this based on your payload structure
+        System.out.println(parameters);
 
         if (target.equals("/")) {
             response.getWriter().println("This is the CI server");
@@ -44,6 +80,13 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         // here you do all the continuous integration tasks
         // for example
+
+        // Parse the payload and extract branch information
+
+
+        // Clone the repository based on the webhook payload
+        String repositoryUrl = "https://github.com/NicoleWij/Group_5_Assignment_1"; // Replace with actual repository URL
+        //Git clone = GitUtilities.cloneRepository(repositoryUrl, branch);
 
 
 //        File path = new File("res/tmp/");

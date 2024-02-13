@@ -1,6 +1,7 @@
 package se.kth.dd2480;
 
 import okhttp3.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
