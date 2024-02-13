@@ -3,6 +3,8 @@
 ## Overview
 This repository contains a Java implementation of the Launch Interceptor Decision Algorithm. The algorithm is designed to evaluate whether an interceptor should be launched based on various Launch Interceptor Conditions (LICs).
 
+hihi
+
 The core of the program revolves around the 'DECIDE()' function, which gives either "YES" or "NO" based on the fulfillment of various requirements. A "YES" result signifies the satisfaction of all 15 Launch Interpretor Conditions (LIC's), assigning boolean values "true" or "false" to the Conditions Met Vector (CMV). The Logical Connector Matrix (LCM) determines the simultaneous consideration of specific LIC's in a 15x15 matrix. The CMV, combined with the LCM, is stored in the Preliminary Unlocking Matrix (PUM), also a 15x15 matrix. Lastly, there are the Preliminary Unlocking Vector (PUV) and the Final Unlocking Vector (FUV). The PUV indicates the relevant LIC's for each launch determination, while the FUV is a 15-element vector requiring all elements to be "true" for launch approval, resulting in a "YES" output.
 
 ## Features
