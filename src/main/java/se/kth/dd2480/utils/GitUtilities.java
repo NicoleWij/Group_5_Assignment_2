@@ -9,15 +9,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GitUtilities {
-    public static Git cloneRepository(String url) throws IOException {
-        Path tempDir = Files.createTempDirectory("myRepository");
-        Path pathDir = tempDir.toAbsolutePath();
-        String cloneDirectoryPath = pathDir.toString();
-
+    public static Git cloneRepository(String url, File path) throws IOException {
+        System.out.println("Cloning repository: " + url);
+        // If the directory already exists, delete it
+        if (path.exists()) {
+            Files.walk(path.toPath())
+                    .map(Path::toFile)
+                    .sorted((o1, o2) -> -o1.compareTo(o2))
+                    .forEach(File::delete);
+        }
         try {
             return Git.cloneRepository()
                     .setURI(url)
-                    .setDirectory(new File("res/tmp/"))
+                    .setDirectory(path)
                     .call();
         } catch (GitAPIException e) {
             System.err.println("Exception occurred while cloning repo: " + e.getMessage());
@@ -25,12 +29,12 @@ public class GitUtilities {
         }
     }
 
-    public static boolean compileProject(Path projectDir) {
+    public static boolean compileProject(File path) {
+        Path projectDir = path.toPath();
         try {
             // Assuming Maven project, replace with your build command
             ProcessBuilder builder = new ProcessBuilder();
             builder.command("mvn", "-f", projectDir.resolve("pom.xml").toString(), "compile");
-            builder.directory(projectDir.toFile());
             Process process = builder.start();
             int exitCode = process.waitFor();
             return exitCode == 0;
@@ -39,5 +43,4 @@ public class GitUtilities {
             return false;
         }
     }
-
 }
