@@ -12,4 +12,3 @@ Hi..
 Hi...
 Hi...!
 Hello v1000!
-Hey
