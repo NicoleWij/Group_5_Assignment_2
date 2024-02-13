@@ -3,7 +3,6 @@ package se.kth.dd2480;/*
  */
 // package
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AppTest {
     @Test
     void appHasAGreeting() {
-        Assertions.assertTrue(true);
+        // App classUnderTest = new App();
+        // assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
     }
 }
