@@ -1,14 +1,12 @@
 package se.kth.dd2480;
 
 import okhttp3.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
 public class GithubStatusUpdater {
-
-
-
 
     public static void requestStatus(String owner, String repo, String sha, String token) throws IOException {
         OkHttpClient client = new OkHttpClient();
@@ -42,7 +40,6 @@ public class GithubStatusUpdater {
         }
     }
 
-
     public static String getAuthToken() {
         String token = System.getenv("GITHUB_AUTH");
         return token;
@@ -50,10 +47,6 @@ public class GithubStatusUpdater {
     public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
         String token = getAuthToken();
         GithubStatusUpdater.requestStatus(owner, repo, sha, token);
-
     }
 
-    public static void main(String[] args) throws IOException {
-        GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", "02054031cd9349203099a67acf90e36a0e18d434", "status");
-    }
 }
