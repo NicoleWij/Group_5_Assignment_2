@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GitUtilities {
-    public static Git cloneRepository(String url File path) throws IOException {
+    public static Git cloneRepository(String url, File path) throws IOException {
         System.out.println("Cloning repository: " + url);
         // If the directory already exists, delete it
         if (path.exists()) {
