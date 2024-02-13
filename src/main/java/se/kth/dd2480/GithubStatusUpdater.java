@@ -8,51 +8,6 @@ import java.io.IOException;
 
 public class GithubStatusUpdater {
 
-    private String owner;
-    private String repo;
-    private String sha;
-    private String status;
-    private String token;
-
-    public void setSha(String sha) {
-        this.sha = sha;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public GithubStatusUpdater(String owner, String repo) {
-        this.owner = owner;
-        this.repo = repo;
-        this.token = getAuthToken();
-    }
-    
-    public JSONObject notifyChange(){
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("https://api.github.com/repos/" + owner + "/" + repo + "/commits")
-                .header("Accept", "application/vnd.github+json")
-                .header("Authorization", "Bearer " + this.token)
-                .header("X-GitHub-Api-Version", "2022-11-28")
-                .get()
-                .build();
-
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Failed to update commit status: " + response);
-            }
-            String responseBody = response.body().string();
-            JSONArray jsonArray = new JSONArray(responseBody);
-            System.out.println(jsonArray.getJSONObject(0));
-            return jsonArray.getJSONObject(0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void requestStatus(String owner, String repo, String sha, String token) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
@@ -85,18 +40,13 @@ public class GithubStatusUpdater {
         }
     }
 
-
     public static String getAuthToken() {
         String token = System.getenv("GITHUB_AUTH");
         return token;
     }
-//    public  void updateStatus(String owner, String repo, String sha, String status) throws IOException {
-//        String token = getAuthToken();
-//        GithubStatusUpdater.requestStatus(owner, repo, sha, token);
-//
-//    }
-//
-//    public static void main(String[] args) throws IOException {
-//        GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", "02054031cd9349203099a67acf90e36a0e18d434", "status");
-//    }
+    public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
+        String token = getAuthToken();
+        GithubStatusUpdater.requestStatus(owner, repo, sha, token);
+    }
+
 }

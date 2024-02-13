@@ -13,7 +13,8 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 public class GitUtilities {
-    public static Git cloneRepository(String url, File path) throws IOException {
+
+    public static Git cloneRepository(String url, File path, String commit) throws IOException {
         System.out.println("Cloning repository: " + url);
         // If the directory already exists, delete it
         if (path.exists()) {
@@ -23,10 +24,12 @@ public class GitUtilities {
                     .forEach(File::delete);
         }
         try {
-            return Git.cloneRepository()
+            Git repo = Git.cloneRepository()
                     .setURI(url)
                     .setDirectory(path)
                     .call();
+            repo.checkout().setName(commit).call();
+            return repo;
         } catch (GitAPIException e) {
             System.err.println("Exception occurred while cloning repo: " + e.getMessage());
             return null;
@@ -36,7 +39,7 @@ public class GitUtilities {
     public static boolean compileProject(File path) {
         Path projectDir = path.toPath();
         try {
-            // Assuming Maven project, replace with your build command
+            // Assuming Maven project
             ProcessBuilder builder = new ProcessBuilder();
             builder.command("mvn", "-f", projectDir.resolve("pom.xml").toString(), "compile");
             Process process = builder.start();
@@ -49,16 +52,44 @@ public class GitUtilities {
     }
 
     public static void handleWebhook(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        if (!request.getMethod().equals("POST"))
-//            throw new AssertionError("Expected POST request");
-//        if (!request.getContentType().equals("application/json"))
-//            throw new AssertionError("Expected JSON content type");
+        if (!request.getMethod().equals("POST"))
+            throw new AssertionError("Expected POST request");
+        if (!request.getContentType().equals("application/json"))
+            throw new AssertionError("Expected JSON content type");
 
         // Get the JSON payload from the request
         StringBuilder payload = new StringBuilder();
         request.getReader().lines().forEach(payload::append);
         String body = payload.toString();
 
-        System.out.println("Received a webhook: " + body);
+        JSONObject json = new JSONObject(body);
+        String ref = json.getString("ref");
+        String after = json.getString("after");
+
+        if (!isAssessmentBranch(ref)) {
+            System.out.println("Not the assessment branch, skipping");
+            return;
+        }
+
+        File path = new File("res/tmp/");
+
+        cloneRepository("https://github.com/" + json.getJSONObject("repository").getString("full_name") + ".git",
+                path,
+                after);
+
+        boolean success = compileProject(path);
+        if (success) {
+            System.out.println("Compilation successful");
+        } else {
+            System.out.println("Compilation failed");
+        }
+    }
+
+    public static boolean isAssessmentBranch(String ref) {
+        try {
+            return ref.trim().split("/")[2].equals("assessment");
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
