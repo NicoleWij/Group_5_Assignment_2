@@ -2,11 +2,15 @@ package se.kth.dd2480.utils;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.json.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 public class GitUtilities {
     public static Git cloneRepository(String url, File path) throws IOException {
@@ -42,5 +46,19 @@ public class GitUtilities {
             System.err.println("Exception occurred during project compilation: " + e.getMessage());
             return false;
         }
+    }
+
+    public static void handleWebhook(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        if (!request.getMethod().equals("POST"))
+//            throw new AssertionError("Expected POST request");
+//        if (!request.getContentType().equals("application/json"))
+//            throw new AssertionError("Expected JSON content type");
+
+        // Get the JSON payload from the request
+        StringBuilder payload = new StringBuilder();
+        request.getReader().lines().forEach(payload::append);
+        String body = payload.toString();
+
+        System.out.println("Received a webhook: " + body);
     }
 }

@@ -1,28 +1,20 @@
 package se.kth.dd2480;// package
 
+import se.kth.dd2480.utils.GitUtilities;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-
 
 import org.eclipse.jgit.api.Git;
-import se.kth.dd2480.utils.GitUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.json.JSONObject;
-import org.kohsuke.github.GHEventPayload.Create;
 
-import java.util.stream.Collectors;
-import java.util.Date;
-import java.text.*;
-import org.json.*;
 import java.nio.file.*;
 
 
@@ -43,25 +35,32 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
+        if (target.equals("/")) {
+            response.getWriter().println("This is the CI server");
+            GitUtilities.handleWebhook(request, response);
+            return;
+        }
+
+
         // here you do all the continuous integration tasks
         // for example
 
 
-        File path = new File("res/tmp/");
+//        File path = new File("res/tmp/");
 
-        // 1st clone your repository
-        Git clone = GitUtilities.cloneRepository("https://github.com/NicoleWij/Group_5_Assignment_1", path);
-
-        // 2nd compile the code
-        if (clone != null) {
-            Path directory = clone.getRepository().getDirectory().toPath().getParent();
-            boolean success = GitUtilities.compileProject(path);
-            if (success) {
-                System.out.println("Compilation successful");
-            } else {
-                System.out.println("Compilation failed");
-            }
-        }
+//        // 1st clone your repository
+//        Git clone = GitUtilities.cloneRepository("https://github.com/NicoleWij/Group_5_Assignment_1", path);
+//
+//        // 2nd compile the code
+//        if (clone != null) {
+//            Path directory = clone.getRepository().getDirectory().toPath().getParent();
+//            boolean success = GitUtilities.compileProject(path);
+//            if (success) {
+//                System.out.println("Compilation successful");
+//            } else {
+//                System.out.println("Compilation failed");
+//            }
+//        }
 
         response.getWriter().println("CI job done");
 
