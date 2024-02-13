@@ -3,6 +3,7 @@ package se.kth.dd2480.utils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.json.JSONObject;
+import se.kth.dd2480.GithubStatusUpdater;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +37,12 @@ public class GitUtilities {
         }
     }
 
+    /**
+     * Core CI feature #1 - compilation
+     *
+     * @param path - path to the project
+     * @return true if compilation was successful, false otherwise
+     */
     public static boolean compileProject(File path) {
         Path projectDir = path.toPath();
         try {
@@ -50,6 +57,29 @@ public class GitUtilities {
             return false;
         }
     }
+
+
+    /**
+     * Core CI feature #2 - testing
+     *
+     * @param path - path to the project
+     * @return true if tests were successful, false otherwise
+     */
+    public static boolean testProject(File path) {
+        try {
+            ProcessBuilder testBuilder = new ProcessBuilder();
+            testBuilder.command("mvn", "test");
+            testBuilder.directory(path);
+            testBuilder.redirectErrorStream(true);
+            Process runTest = testBuilder.start();
+            int exitCode = runTest.waitFor();
+            return exitCode == 0;
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Exception occurred during project testing: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     public static void handleWebhook(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!request.getMethod().equals("POST"))
@@ -72,16 +102,33 @@ public class GitUtilities {
         }
 
         File path = new File("res/tmp/");
-
+        String status;
+        
         cloneRepository("https://github.com/" + json.getJSONObject("repository").getString("full_name") + ".git",
                 path,
                 after);
 
         boolean success = compileProject(path);
+
         if (success) {
             System.out.println("Compilation successful");
         } else {
             System.out.println("Compilation failed");
+            status = "error";
+            GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status );
+        }
+
+        if (success) {
+            boolean testsPassed = testProject(path);
+
+            if (testsPassed) {
+                System.out.println("Tests passed");
+                status = "success";
+            } else {
+                System.out.println("Tests failed");
+                status = "failure";
+            }
+            GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status );
         }
     }
 

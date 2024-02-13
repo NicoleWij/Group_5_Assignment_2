@@ -8,11 +8,11 @@ import java.io.IOException;
 
 public class GithubStatusUpdater {
 
-    public static void requestStatus(String owner, String repo, String sha, String token) throws IOException {
+    public static void requestStatus(String owner, String repo, String sha, String token, String status) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("state", "success");
+        jsonBody.put("state", status); //success or failure or pending or error
         jsonBody.put("target_url", "https://example.com/build/status");
         jsonBody.put("description", "Tests passed!");
         jsonBody.put("context", "continuous-integration/jenkins");
@@ -46,7 +46,7 @@ public class GithubStatusUpdater {
     }
     public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
         String token = getAuthToken();
-        GithubStatusUpdater.requestStatus(owner, repo, sha, token);
+        GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
     }
 
 }
