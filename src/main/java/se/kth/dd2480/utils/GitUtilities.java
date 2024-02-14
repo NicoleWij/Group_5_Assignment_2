@@ -15,6 +15,14 @@ import java.util.stream.Collectors;
 
 public class GitUtilities {
 
+    /**
+     * Clones the specified repository from the url to the specified directory
+     * @param url specified url for the repository as string
+     * @param path path for the directory in which repository will be stored
+     * @param commit commit id that is used for checkout command
+     * @return Git object reference to the cloned repo, returns null if error
+     * @throws IOException
+     */
     public static Git cloneRepository(String url, File path, String commit) throws IOException {
         System.out.println("Cloning repository: " + url);
         // If the directory already exists, delete it
@@ -38,7 +46,7 @@ public class GitUtilities {
     }
 
     /**
-     * Core CI feature #1 - compilation
+     * Core CI feature #1 - compilation. Runs the "mvn -f ~/pom.xml compile" command in shell
      *
      * @param path - path to the project
      * @return true if compilation was successful, false otherwise
@@ -60,7 +68,7 @@ public class GitUtilities {
 
 
     /**
-     * Core CI feature #2 - testing
+     * Core CI feature #2 - testing. Runs the test "mvn test" command in the shell
      *
      * @param path - path to the project
      * @return true if tests were successful, false otherwise
@@ -81,6 +89,12 @@ public class GitUtilities {
     }
 
 
+    /** Handles a HTTP POST request. When a commit is made to the remote repository, the webhook send an HTTP POST
+     * request with a JSON payload. Server receives it, clones the respository, compiles it and runs the tests
+     * @param request the HTTP request
+     * @param response HTTP response for other types of requests, unused for HTTP POST
+     * @throws IOException
+     */
     public static void handleWebhook(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!request.getMethod().equals("POST"))
             throw new AssertionError("Expected POST request");
@@ -132,6 +146,11 @@ public class GitUtilities {
         }
     }
 
+    /**
+     * Checks if the branch being cloned is the assessment one used for this assignment
+     * @param ref name of the branch
+     * @return true if assessment branch, false otherwise
+     */
     public static boolean isAssessmentBranch(String ref) {
         try {
             return ref.trim().split("/")[2].equals("assessment");

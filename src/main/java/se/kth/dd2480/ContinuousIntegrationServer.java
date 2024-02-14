@@ -27,6 +27,16 @@ import java.util.Map;
 */
 public class ContinuousIntegrationServer extends AbstractHandler
 {
+
+
+    /**
+     * @param target
+     * @param baseRequest
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,

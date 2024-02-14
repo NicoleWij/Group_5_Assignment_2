@@ -8,6 +8,14 @@ import java.io.IOException;
 
 public class GithubStatusUpdater {
 
+    /**
+     * @param owner
+     * @param repo
+     * @param sha
+     * @param token
+     * @param status
+     * @throws IOException
+     */
     public static void requestStatus(String owner, String repo, String sha, String token, String status)
             throws IOException {
         OkHttpClient client = new OkHttpClient();
@@ -49,11 +57,21 @@ public class GithubStatusUpdater {
         }
     }
 
+    /**
+     * @return
+     */
     public static String getAuthToken() {
         String token = System.getenv("GITHUB_AUTH");
         return token;
     }
 
+    /**
+     * @param owner
+     * @param repo
+     * @param sha
+     * @param status
+     * @throws IOException
+     */
     public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
         String token = getAuthToken();
         GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
