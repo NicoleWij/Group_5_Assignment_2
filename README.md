@@ -48,7 +48,7 @@ Note that all group members have worked together on all features in the assignme
 
 - **Maja Larsson**: Active in general design and implementation for core feature 1 and 2. Contributed to documentation of README and wrote the documentation for property semat (Checklist for team). Implemented testing of the server. 
 
-- **Martin Catheland**: Active in general design and implementation for all core features. Created the skeleton for `utils` including `GitUtilites.java`. Implemented testing of the server. 
+- **Martin Catheland**: Active in general design and implementation for all core features. Created the skeleton for `utils` including `GitUtilites.java`. Implemented testing of the server. Implemented the CI feature for keeping the history of the past builds. 
 
 - **Nicole Wijkman**: Active in general design and implementation for core feature 1 and 2. Primarily involved in the development of core feature 1, designing and writing the code for the cloning and compilation features of the CI. Contributed to documentation of README and general documentation. Implemented testing of the server. 
 
