@@ -6,7 +6,7 @@ import main.java.computations.CMV;
 import main.java.computations.FUV;
 import main.java.computations.PUM;
 import main.java.utils.Utils.Parameters;
-import main.java.utils.Utils.Matrix;
+import main.java.utils.Utils.Matrix
 
 /**
  * main.java.Decide class is responsible for the final launch decision.
