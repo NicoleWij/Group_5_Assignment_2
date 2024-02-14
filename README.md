@@ -24,7 +24,7 @@ git clone https://github.com/NicoleWij/Group_5_Assignment_2
 ```
 
 ## Testing
-The testing is implemented with Junit 5. To test you can either use the Testing feature in VS code, and then run all Java tests with Junit Jupiter. For testing using the terminal follow the instructions below, which is an example of how to test all LICs.
+The testing is implemented with Junit 5. To test you can either use the Testing feature in VS code, and then run all Java tests with Junit Jupiter. For testing using the terminal follow the instructions below.
 
 ```bash
 # Compile TEST 
