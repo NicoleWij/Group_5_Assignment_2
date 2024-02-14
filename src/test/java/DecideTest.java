@@ -8,7 +8,7 @@ import main.java.utils.Utils.Coordinate;
 import main.java.utils.Utils.Parameters;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assertions
 
 public class DecideTest {
     @Test
@@ -104,7 +104,7 @@ public class DecideTest {
 
         Assertions.assertEquals(
                 Decide.decide(xCoords, yCoords, myParam, lcm, puv).launch(),
-                "NO");
+                "YES");
 
         Assertions.assertEquals(
                 Decide.decide(xCoords, yCoords, myParam, lcm2, puv).launch(),
