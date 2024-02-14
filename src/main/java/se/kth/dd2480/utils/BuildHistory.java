@@ -24,9 +24,12 @@ public final class BuildHistory {
     }
 
     /**
-     * The path to the build history file.
+     * The path to the build history folder.
      */
     private static final String BUILD_HISTORY_PATH = "res/builds/";
+    /**
+     * The path to the build history list file.
+     */
     private static final String BUILD_HISTORY_LIST = "res/builds.json";
 
     /**
@@ -42,9 +45,8 @@ public final class BuildHistory {
         build.put("date", date);
         build.put("logs", logs);
 
-        // Save the build to a file
         String filename = BUILD_HISTORY_PATH + date + ".json";
-        // Create the directory if it does not exist
+
         try {
             java.nio.file.Files.createDirectories(java.nio.file.Paths.get(BUILD_HISTORY_PATH));
         } catch (IOException e) {
@@ -60,6 +62,13 @@ public final class BuildHistory {
         }
     }
 
+    /**
+     * Adds a build to the list of builds.
+     *
+     * @param commit The commit identifier.
+     * @param date   The date of the build.
+     * @param logs   Build logs.
+     */
     public static void addBuildToHistoryList(String commit, String date, String logs) {
         JSONObject build = new JSONObject();
         build.put("commit", commit);
@@ -100,6 +109,11 @@ public final class BuildHistory {
         }
     }
 
+    /**
+     * Returns a list of all builds.
+     *
+     * @return A map of build names to build JSON objects.
+     */
     public static Map<String, JSONObject> getBuildHistoryList() {
         String filename = BUILD_HISTORY_LIST;
         File file = new File(filename);
@@ -114,6 +128,12 @@ public final class BuildHistory {
         return builds;
     }
 
+    /**
+     * Returns a specific build.
+     *
+     * @param build The build name.
+     * @return The build JSON object.
+     */
     public static JSONObject getBuild(String build) {
         String filename = BUILD_HISTORY_PATH + build + ".json";
         File file = new File(filename);
@@ -123,6 +143,12 @@ public final class BuildHistory {
         return getJsonObject(filename);
     }
 
+    /**
+     * Help method to get a JSON object from a file.
+     *
+     * @param filename The file to read from.
+     * @return The JSON object read from the file.
+     */
     @NotNull
     private static JSONObject getJsonObject(String filename) {
         try (java.util.stream.Stream<String> stream = java.nio.file.Files.lines(java.nio.file.Paths.get(filename))) {

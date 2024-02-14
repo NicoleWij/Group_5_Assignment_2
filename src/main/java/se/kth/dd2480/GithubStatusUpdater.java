@@ -1,21 +1,36 @@
 package se.kth.dd2480;
 
 import okhttp3.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+/**
+ * The GithubStatusUpdater class provides methods for updating the status of a commit on GitHub.
+ * It includes functionality to send a status request to the GitHub API and update the commit status
+ * based on the provided parameters.
+ */
 public class GithubStatusUpdater {
-
+    /**
+     * Sends a status request to the GitHub API to update the status of a commit.
+     *
+     * @param owner  The owner of the GitHub repository.
+     * @param repo   The name of the GitHub repository.
+     * @param sha    The SHA-1 hash of the commit.
+     * @param token  The authentication token for accessing the GitHub API.
+     * @param status The status to set for the commit ("success", "failure", "pending", or "error").
+     * @throws IOException if there is an issue with the HTTP request or response.
+     */
     public static void requestStatus(String owner, String repo, String sha, String token, String status)
             throws IOException {
         OkHttpClient client = new OkHttpClient();
 
+        // Create JSON payload for the status request
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("state", status); // success or failure or pending or error
         jsonBody.put("target_url", "https://example.com/build/status");
 
+        // Set description based on the status
         if (status.equals("success")) {
             jsonBody.put("description", "Tests passed!");
         } else if (status.equals("failure")) {
@@ -49,14 +64,27 @@ public class GithubStatusUpdater {
         }
     }
 
+    /**
+     * Retrieves the GitHub authentication token from the environment variables.
+     *
+     * @return The GitHub authentication token.
+     */
     public static String getAuthToken() {
         String token = System.getenv("GITHUB_AUTH");
         return token;
     }
 
+    /**
+     * Updates the status of a commit on GitHub using the provided parameters.
+     *
+     * @param owner  The owner of the GitHub repository.
+     * @param repo   The name of the GitHub repository.
+     * @param sha    The SHA-1 hash of the commit.
+     * @param status The status to set for the commit ("success", "failure", "pending", or "error").
+     * @throws IOException if there is an issue with the HTTP request or response.
+     */
     public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
         String token = getAuthToken();
         GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
     }
-
 }
