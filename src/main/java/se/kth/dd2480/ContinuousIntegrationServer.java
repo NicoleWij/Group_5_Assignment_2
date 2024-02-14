@@ -20,17 +20,24 @@ import java.util.Map;
 
 
 /**
- Skeleton of a com.kth.dd2480.ContinuousIntegrationServer which acts as webhook
- See the Jetty documentation for API documentation of those classes.
-*/
-public class ContinuousIntegrationServer extends AbstractHandler
-{
+ * Skeleton of a com.kth.dd2480.ContinuousIntegrationServer which acts as webhook
+ * See the Jetty documentation for API documentation of those classes.
+ */
+public class ContinuousIntegrationServer extends AbstractHandler {
+    /**
+     * This method is called when the server receives a request. It should
+     * handle the request and provide a response.
+     *
+     * @param target      The target of the request - a URI
+     * @param baseRequest The original unwrapped request object.
+     * @param request     The request either as the {@link Request}
+     * @param response    The response as the {@link HttpServletResponse}
+     */
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
-                       HttpServletResponse response) 
-        throws IOException, ServletException
-    {
+                       HttpServletResponse response)
+            throws IOException, ServletException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
@@ -40,24 +47,27 @@ public class ContinuousIntegrationServer extends AbstractHandler
             response.getWriter().println("This is the CI server");
             GitUtilities.handleWebhook(request, response);
         } else if (target.matches("/builds/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2" +
-                "}:\\d{2}\\+\\d{2}:\\d{2}"))
-        {
+                "}:\\d{2}\\+\\d{2}:\\d{2}")) {
             showSingleBuild(target.substring(8), response);
         } else if (target.equals("/builds")) {
             showAllBuilds(response);
-        }
-        else {
+        } else {
             response.getWriter().println("This is not the page you are looking for");
         }
-        // Regex for matching the /builds/ path, which is composed of a date
-        // in the form YYYY-MM-DDTHH:MM:SS+HH:MM
-
     }
 
+    /**
+     * This method is called when the server receives a request to show a single
+     * build. It should handle the request and provide a response.
+     *
+     * @param buildName the name of the build to show
+     * @param response  the response as the {@link HttpServletResponse}
+     * @throws IOException if an I/O error occurs while reading the request or
+     *                     sending the response.
+     */
     public static void showSingleBuild(String buildName,
                                        HttpServletResponse response)
-        throws IOException
-    {
+            throws IOException {
         JSONObject build = BuildHistory.getBuild(buildName);
         if (build == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -66,16 +76,23 @@ public class ContinuousIntegrationServer extends AbstractHandler
             response.getWriter().println("<a href=\"/builds\">Back to builds</a>");
             response.getWriter().println("<h1>Build " + buildName + "</h1>");
             response.getWriter().println("<p>Commit name : " + build.get(
-                    "commit")+ "</p>");
+                    "commit") + "</p>");
             response.getWriter().println("<p>Build date is : " + build.get(
                     "date") + "</p>");
             response.getWriter().println("<p>Logs : " + build.get("logs") + "</p>");
         }
     }
 
+    /**
+     * This method is called when the server receives a request to show all
+     * builds. It should handle the request and provide a response.
+     *
+     * @param response the response as the {@link HttpServletResponse}
+     * @throws IOException if an I/O error occurs while reading the request or
+     *                     sending the response.
+     */
     public static void showAllBuilds(HttpServletResponse response)
-        throws IOException
-    {
+            throws IOException {
         Map<String, JSONObject> builds = BuildHistory.getBuildHistoryList();
         response.getWriter().println("<h1>Build list :</h1>");
         for (String buildName : builds.keySet()) {
@@ -87,13 +104,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
                     buildName + "</a></p>");
         }
     }
- 
-    // used to start the CI server in command line
-    public static void main(String[] args) throws Exception
-    {
+
+    /**
+     * Used to start the server.
+     */
+    public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         Server server = new Server(8005);
-        server.setHandler(new ContinuousIntegrationServer()); 
+        server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();
     }
