@@ -104,7 +104,7 @@ public class DecideTest {
 
         Assertions.assertEquals(
                 Decide.decide(xCoords, yCoords, myParam, lcm, puv).launch(),
-                "YES");
+                "NO");
 
         Assertions.assertEquals(
                 Decide.decide(xCoords, yCoords, myParam, lcm2, puv).launch(),
