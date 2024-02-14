@@ -45,7 +45,6 @@ public class GitUtilities {
             repo.checkout().setName(commit).call();
             return repo;
         } catch (GitAPIException e) {
-            System.err.println("Exception occurred while cloning repo: " + e.getMessage());
             return null;
         }
     }
