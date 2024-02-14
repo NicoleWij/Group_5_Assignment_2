@@ -8,7 +8,7 @@ import main.java.utils.Utils.Coordinate;
 import main.java.utils.Utils.Parameters;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions;
 
 public class DecideTest {
     @Test
