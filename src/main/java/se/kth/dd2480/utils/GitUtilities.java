@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 
 public class GitUtilities {
 
@@ -93,6 +92,7 @@ public class GitUtilities {
         String body = payload.toString();
 
         JSONObject json = new JSONObject(body);
+        System.out.println("Received webhook: " + json.toString());
         String ref = json.getString("ref");
         String after = json.getString("after");
 
@@ -103,19 +103,29 @@ public class GitUtilities {
 
         File path = new File("res/tmp/");
         String status;
-        
+
         cloneRepository("https://github.com/" + json.getJSONObject("repository").getString("full_name") + ".git",
                 path,
                 after);
 
         boolean success = compileProject(path);
+        String pusher = json.getJSONObject("pusher").getString("name");
+        String timestamp = json.getJSONObject("head_commit").getString("timestamp");
+        StringBuilder buildLogs = new StringBuilder();
+        buildLogs.append("<p>Build triggered by ")
+                .append(pusher).append("</p>");
+
 
         if (success) {
             System.out.println("Compilation successful");
+            buildLogs.append("<p style=\"color:darkgreen\"> Compilation : " +
+                    "Success</p>");
         } else {
             System.out.println("Compilation failed");
+            buildLogs.append("<p style=\"color:firebrick\"> Compilation : " +
+                    "Failed</p>");
             status = "error";
-            GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status );
+            GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status);
         }
 
         if (success) {
@@ -123,12 +133,18 @@ public class GitUtilities {
 
             if (testsPassed) {
                 System.out.println("Tests passed");
+                buildLogs.append("<p style=\"color:darkgreen\"> Tests : " +
+                        "Success</p>");
                 status = "success";
             } else {
                 System.out.println("Tests failed");
+                buildLogs.append("<p style=\"color:firebrick\"> Tests : " +
+                        "Failed</p>");
                 status = "failure";
             }
-            GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status );
+            GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status);
+            BuildHistory.addBuild(after, timestamp, buildLogs.toString());
+            BuildHistory.addBuildToHistoryList(after, timestamp, buildLogs.toString());
         }
     }
 
