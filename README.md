@@ -1,4 +1,4 @@
-# Continuous Integration CI Server
+# Continuous Integration Server - Assignment 2
 
 ## Overview
 This Java-based Continuous Integration (CI) server is designed to encapsulate the core functionalities of CI processes, catering to essential CI features. The server can be configured to listen for webhooks from Github, to automatically test a repository each time a new push event occurs.
@@ -40,11 +40,13 @@ The testing is implemented with Junit 5. To test you can either use the Testing 
 
 
 ## Statement of Contributions
-- **Maja Larsson**: [Contribution details]
-- **Martin Catheland**: [Contribution details]
-- **Nicole Wijkman**: [Contribution details]
-- **Simon Hocker**: [Contribution details]
-- **Serhan Çakmak**: [Contribution details]
+Note that all group members have worked together on all features in the assignment by using the "Code with me" feature in intelliJ.
+
+- **Maja Larsson**: Active in general design and implementation for core feature 1 and 2. Contributed to documentation of README and wrote the documentation for property semat (Checklist for team).
+- **Martin Catheland**: Active in general design and implementation for all core features. Created the skeleton for `utils` including `GitUtilites.java`. Implemented testing of the server. 
+- **Nicole Wijkman**: Active in general design and implementation for core feature 1 and 2. Primarily involved in the development of core feature 1, designing and writing the code for the cloning and compilation features of the CI. Contributed to documentation of README and general documentation. 
+- **Simon Hocker**: Active in general design and implementation for all core features. Primarily involved in the development of core feature 1, designing and writing the code for the cloning and compilation features of the CI. Contributed to general documentation throughout the assignment.
+- **Serhan Çakmak**: Active in general design and implementation of all core features. Implemented the fundamentals of `GithubStatusUpdater.java`. Created the skeleton for the Maven project structure. 
 
 ## About This Project
 This project was developed as part of an assignment for DD2480 Software Engineering Fundamentals at KTH Royal Institute of Technology and Science. It is meant for educational purposes by the members of Group 5.
