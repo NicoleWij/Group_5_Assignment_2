@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class GithubStatusUpdater {
 
-    public static void requestStatus(String owner, String repo, String sha, String token, String status)
+    public static boolean requestStatus(String owner, String repo, String sha, String token, String status)
             throws IOException {
         OkHttpClient client = new OkHttpClient();
 
@@ -20,8 +20,6 @@ public class GithubStatusUpdater {
             jsonBody.put("description", "Tests passed!");
         } else if (status.equals("failure")) {
             jsonBody.put("description", "Tests failed!");
-        } else if (status.equals("pending")) {
-            jsonBody.put("description", "Status pending.");
         } else if (status.equals("error")) {
             jsonBody.put("description", "Error");
         }
@@ -46,6 +44,10 @@ public class GithubStatusUpdater {
             System.out.println(response.body().string());
 
             System.out.println("Commit status updated successfully");
+            return true;
+        }catch (Exception e){
+            System.out.println("False case");
+            return false;
         }
     }
 
@@ -54,9 +56,36 @@ public class GithubStatusUpdater {
         return token;
     }
 
-    public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
+    public static boolean updateStatus(String owner, String repo, String sha, String status) throws IOException {
         String token = getAuthToken();
-        GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
+        return GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
     }
+
+
+    public static String getStatus(String owner, String repo, String sha){
+        String token =  getAuthToken();
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://api.github.com/repos/" + owner + "/" + repo + "/commits/" + sha + "/status")
+                .header("Accept", "application/vnd.github+json")
+                .header("Authorization", "Bearer " + token)
+                .header("X-GitHub-Api-Version", "2022-11-28")
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to update commit status: " + response);
+            }
+            JSONObject res = new JSONObject(response.body().string());
+            String state = res.getString("state");
+            return state;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+
 
 }
