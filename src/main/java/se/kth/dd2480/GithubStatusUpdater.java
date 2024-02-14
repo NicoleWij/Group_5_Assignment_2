@@ -61,10 +61,8 @@ public class GithubStatusUpdater {
             System.out.println(response.body().string());
 
             System.out.println("Commit status updated successfully");
-            return true;
         }catch (Exception e){
             System.out.println("False case");
-            return false;
         }
     }
 
@@ -91,7 +89,7 @@ public class GithubStatusUpdater {
     public static void updateStatus(String owner, String repo, String sha, String status) throws IOException {
 
         String token = getAuthToken();
-        return GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
+        GithubStatusUpdater.requestStatus(owner, repo, sha, token, status);
     }
 
 
