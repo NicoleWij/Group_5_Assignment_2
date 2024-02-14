@@ -29,6 +29,9 @@ mvn clean package
 
 # Run
 mvn test
+
+# Execute 
+java -jar assignment2_maven-1.0-SNAPSHOT.jar (in the same folder as the jar file)
 ```
 ## Core CI feature #1 - Compilation
 Compilation has been implemented in the method `compileProject` in `GitUtilities`. The method executes the Maven compile command through a process, waits for that process to complete, and then checks the process's exit code. A return value of true indicates a successful compilation, while false indicates a failure or an exception during the compilation process.
