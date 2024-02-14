@@ -164,9 +164,9 @@ public class GitUtilities {
                 status = "failure";
             }
             GithubStatusUpdater.updateStatus("NicoleWij", "Group_5_Assignment_2", after, status);
-            BuildHistory.addBuild(after, timestamp, buildLogs.toString());
-            BuildHistory.addBuildToHistoryList(after, timestamp, buildLogs.toString());
         }
+        BuildHistory.addBuild(after, timestamp, buildLogs.toString());
+        BuildHistory.addBuildToHistoryList(after, timestamp, buildLogs.toString());
     }
 
     /**
